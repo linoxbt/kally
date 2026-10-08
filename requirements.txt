@@ -1,0 +1,7 @@
+genlayer-py
+genlayer-test
+fastapi
+uvicorn
+ipfshttpclient
+python-multipart
+pytest
