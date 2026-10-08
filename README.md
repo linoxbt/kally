@@ -1,5 +1,7 @@
 # Kally
 
+**V2 work in progress:** `contracts/KallyMarketV2.py` computes a bounded linear classifier benchmark in validator execution, with model and held-out dataset SHA-256 commitments. The frontend now creates V2 markets. See [V2_PROTOCOL.md](V2_PROTOCOL.md) for the exact format and limitations. The existing Studio Dev address is a legacy V1 contract; its score is based on unverified submitted predictions. Do not mistake it for a validator-executed market.
+
 Kally is a GenLayer prediction market for whether a model reaches a target score on a fixed benchmark by a deadline. This repository contains one GenLayer contract per market, a small IPFS backed benchmark service, and direct contract tests.
 
 The web experience is in `frontend/`. It has a landing page and a Studio Dev app for market discovery, wallet connection, betting, claims, and market creation. Run `cd frontend && npm install && npm run dev` for local development, or `npm run build` for a production build. The app includes the deployed demo market by default and stores additional contract addresses in browser storage. Reown AppKit connects EVM wallets; set `NEXT_PUBLIC_REOWN_PROJECT_ID` for local development.

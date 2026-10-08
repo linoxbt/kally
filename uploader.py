@@ -3,6 +3,7 @@
 Start an IPFS Kubo daemon separately and set IPFS_API if needed.
 """
 import json
+import hashlib
 import os
 import re
 import secrets
@@ -14,6 +15,7 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Header
 from pydantic import BaseModel, Field
 
 from benchmark.scoring import FIXTURE, score_predictions
+from benchmark.validator_v2 import parse_artifact
 
 app = FastAPI(title="Kally benchmark service")
 CID_RE = re.compile(r"^[a-zA-Z0-9]{40,100}$")
@@ -75,6 +77,26 @@ async def upload_checkpoint(file: UploadFile = File(...), authorization: str | N
     except Exception as exc:
         raise HTTPException(503, "IPFS unavailable") from exc
     return {"cid": cid, "bytes": len(data)}
+
+
+@app.post("/v2/artifacts/{kind}")
+async def upload_v2_artifact(kind: str, file: UploadFile = File(...), authorization: str | None = Header(default=None)):
+    """Pin a bounded JSON model or dataset and return the on-chain commitment."""
+    require_operator(authorization)
+    if kind not in ("model", "dataset"):
+        raise HTTPException(404, "unknown artifact kind")
+    data = await file.read(65_537)
+    try:
+        parse_artifact(data, kind)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    try:
+        with ipfs_client() as client:
+            cid = client.add_bytes(data)
+            client.pin.add(cid)
+    except Exception as exc:
+        raise HTTPException(503, "IPFS unavailable") from exc
+    return {"cid": cid, "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data), "kind": kind}
 
 
 @app.post("/reports")

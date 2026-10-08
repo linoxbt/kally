@@ -4,5 +4,6 @@ __pycache__/
 *.pyc
 .env
 artifacts/
+.ipfs-v2/
 frontend/.openai/
 frontend/tsconfig.tsbuildinfo
