@@ -1,0 +1,7 @@
+What if you could take a position on whether an AI model meets a measurable benchmark?
+
+Kally is a GenLayer prediction market for that question. Its demo market asks whether Kally Demo Classifier reaches 80% accuracy. The flow connects a market position to a report pinned on IPFS, then has validators recompute the score from that report.
+
+Built on GenLayer Studio Dev. Explore the demo: https://frontend-nu-dun-93.vercel.app
+
+Note: This video illustrates the demo workflow; it does not show a completed live resolution.
