@@ -17,10 +17,11 @@ cd /root/kally
 uv venv .venv
 uv pip install --python .venv/bin/python -r requirements.txt
 .venv/bin/python -m pytest tests/test_uploader.py tests/test_kally.py::test_demo_score -q
+export KALLY_SERVICE_TOKEN="replace-with-a-long-random-token"
 .venv/bin/uvicorn uploader:app --host 0.0.0.0 --port 8000
 ```
 
-Set `IPFS_API` if the Kubo API is not at `/ip4/127.0.0.1/tcp/5001/http`. Expose the service through HTTPS; do not use localhost for the contract's `report_base_url`.
+Set `IPFS_API` if the Kubo API is not at `/ip4/127.0.0.1/tcp/5001/http`. Write endpoints require `Authorization: Bearer <KALLY_SERVICE_TOKEN>` and fail closed if the token is unset. Keep this token on the server; never put it in a `NEXT_PUBLIC_` variable. Expose the service through HTTPS; do not use localhost for the contract's `report_base_url`.
 
 ## Market walkthrough
 
@@ -42,7 +43,8 @@ If no checkpoint was submitted, anyone can call `cancel_missing_checkpoint()` af
 ## Notes
 
 - The contract is the source of truth for bets and resolution. No SQL database is needed for this prototype.
-- The report service must keep its IPFS node and HTTPS endpoint available during resolution. The CID protects report contents from mutation. The score is recomputed on-chain, but predictions are not cryptographically bound to the uploaded checkpoint.
+- The report service must keep its IPFS node and HTTPS endpoint available during resolution. Use `/ready` to check the operator token and IPFS connectivity. The CID protects report contents from mutation. The score is recomputed on-chain, but predictions are not cryptographically bound to the uploaded checkpoint.
+- The installed `ipfshttpclient` performs an outdated Kubo version check in `connect()`, so the service uses its `Client` constructor with a short timeout. Upload, pin, and retrieval were verified against an isolated Kubo v0.43.1 node. The shared local IPFS datastore is full and cannot pin new content.
 - The current local `genlayer-test` runner cannot load the Studio Dev runtime pin, so direct contract tests fail with `unexpected end of memory`. The corrected contract was deployed and `get_market` was verified on Studio Dev; see `DEPLOYMENT.md`.
 
 GenLayer references: [contract syntax](https://docs.genlayer.com/developers/intelligent-contracts/first-intelligent-contract), [value transfers](https://docs.genlayer.com/developers/intelligent-contracts/features/value-transfers), [web access](https://docs.genlayer.com/developers/intelligent-contracts/features/web-access), [testing](https://docs.genlayer.com/developers/intelligent-contracts/testing).

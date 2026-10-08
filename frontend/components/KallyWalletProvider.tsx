@@ -6,8 +6,8 @@ import { useState, type ReactNode } from "react";
 import { WagmiProvider } from "wagmi";
 import { networks, projectId, wagmiAdapter } from "@/lib/wallet";
 
-if (projectId) createAppKit({
-  adapters: [wagmiAdapter], networks, defaultNetwork: networks[0], projectId,
+createAppKit({
+  adapters: [wagmiAdapter], networks, defaultNetwork: networks[0], projectId: projectId || "unset",
   metadata: { name: "Kally", description: "AI benchmark prediction markets on GenLayer", url: "https://frontend-nu-dun-93.vercel.app", icons: ["https://frontend-nu-dun-93.vercel.app/kally-logo.png"] },
   features: { analytics: false, email: false, socials: [] },
 });

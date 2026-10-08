@@ -5,3 +5,4 @@ uvicorn
 ipfshttpclient
 python-multipart
 pytest
+httpx2
