@@ -11,6 +11,7 @@ This document tracks the findings from the independent audit. Passing a UI or se
 | Missing-checkpoint cancellation button | Fixed locally | UI invokes the existing contract method; TypeScript and lint pass; wallet transaction not yet tested |
 | Misleading open/cancelled market status | Fixed locally | Deadline, bond, and cancellation are included; TypeScript and lint pass |
 | YES/NO control visibility | Fixed locally | The live market already rendered both sides after hydration; a visible market-detail shortcut now scrolls directly to the position controls. TypeScript and lint pass; browser click interaction still needs QA |
+| Legacy settlement warning at point of action | Fixed and deployed | The market detail now states before the YES/NO controls that submitted predictions are not proof of checkpoint execution and outcomes can be manipulated. Vercel completed the production build; an immediate automated browser recheck received a Vercel bot challenge from this testing IP. This is a disclosure, not a fix for the contract-level flaw |
 | Ineligible payout claim button | Partly fixed | UI checks known position state; bond claimant eligibility is not exposed by the deployed contract |
 | Market import shape validation | Fixed locally | `get_market` response is validated before storage/rendering; TypeScript and lint pass |
 | Newly deployed market address discovery | Partly fixed | Address is taken from decision receipt and stored locally; browser-wallet deployment still needs live verification and there is no global index |
